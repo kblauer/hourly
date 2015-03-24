@@ -130,7 +130,7 @@ def edit_entry(request):
             response_data['result'] = 'Failure'
             response_data['message'] = "This request failed"
             
-        
+    return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 
 def delete_entry(request):
