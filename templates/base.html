@@ -22,14 +22,15 @@
     <!-- Bootstrap Core CSS -->
     <link href="{% static "css/bootstrap.css" %}" rel="stylesheet">
     
+    <!-- Font Awesome -->
+    <link href="{% static 'font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" media="screen" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
+    
 
 	<!-- This defines a django 'block', allowing us to define what should go in this block
 		 easily from other files.  It allows everyone to use this base boilerplate template, 
 		 and overwrite what is necessary for each page. -->
 	{% block styles %}
-	
-    <!-- Extra Homepage CSS-->
-    <link href="{% static "css/index.css" %}" rel="stylesheet">
     
     {% endblock %}
 
@@ -53,7 +54,7 @@
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
 {% block jquery %}
-<script src="{% static "js/jquery.js" %}"></script>
+<script src="{% static "js/jquery_1.11.js" %}"></script>
 {% endblock %}
 <script src="{% static "js/bootstrap.js" %}"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
@@ -62,7 +63,10 @@
 <!-- Scripts block, to allow for additional scripts to be added in this spot of the HTML
 	 by other template files.  As stated above, all scripts should be placed at the end of HTML documents -->
 {% block scripts %}
+
 {% endblock %}
+
+
 {% endblock %}
 
 </body>

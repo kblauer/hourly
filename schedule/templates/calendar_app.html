@@ -1,0 +1,312 @@
+{% extends "dash.html" %}
+{% load staticfiles %}
+
+
+{% block dashStyles %}
+	<!--FullCalendar Dependencies-->
+	<link href="{% static 'css/fullcalendar.css' %}" rel='stylesheet' />
+	<link href="{% static 'css/fullcalendar.print.css' %}" rel='stylesheet' media='print' />
+{% endblock %}
+
+
+{% block dashContent %}
+
+<!-- Page Heading -->
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">
+                Edit Schedule <small>Add, Edit, and Remove Events</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-dashboard"></i><a href="/dash/"> Dashboard</a>
+                </li>
+                <li class="active">
+                	Edit Schedule
+                </li>
+            </ol>
+        </div>
+    </div>
+    <!-- /.row -->
+
+
+    <div class="row">
+				
+<!--FullCalendar container div-->
+<div id='calendar'></div>
+
+</div>
+
+{% endblock %}
+
+
+{% block dashScripts %}
+<!--
+<script src="{% static 'js/jquery-ui-1.10.2.custom.min.js' %}"></script>
+-->
+
+<!--FullCalendar-->
+<script src="{% static 'js/fullcalendar.js' %}"></script>
+<script src="{% static 'js/jquery-ui-1.10.2.custom.min.js' %}"></script>
+
+<!-- Main script to enable calendar and it's features, it has to be placed here due to django template contexts needing to be filled. -->
+
+		<script type="text/javascript">
+		
+		/*
+			jQuery document ready
+		*/
+
+		 //$(document).ready(function() {
+		 
+			/*
+				date store today date.
+				d store today date.
+				m store current month.
+				y store current year.
+			*/
+			
+			var date = new Date();
+			var d = date.getDate();
+			var m = date.getMonth();
+			var y = date.getFullYear();
+			
+			var events_json;
+			var events_array = [];
+			
+			{% for sched_item in entries %}
+				var temp_obj = {};
+				temp_obj.id = {{ sched_item.id }};
+				temp_obj.title =  "{{ sched_item.title }}";
+				temp_obj.start = "{{ sched_item.start | date:'Y-m-d H:i:s' }}";
+				temp_obj.end = "{{ sched_item.end | date:'Y-m-d H:i:s' }}";
+				temp_obj.allDay = "{{ sched_item.allDay }}";
+				
+				if (temp_obj.allDay == "True") {
+					temp_obj.allDay = true;
+				} else {
+					temp_obj.allDay = false;
+				}
+				
+				events_array.push(temp_obj);
+				
+			{% endfor %}
+			
+			var events_source = { events: events_array, }
+			
+			console.log(events_source);
+						
+			/*
+				Initialize fullCalendar and store into variable.
+				Why in variable?
+				Because doing so we can use it inside other function.
+				In order to modify its option later.
+			*/
+			
+			var calendar = $('#calendar').fullCalendar(
+			{
+			
+				editable: true,
+				
+				header: {
+					left: 'prev,next today',
+					center: 'title',
+					right: 'month,agendaWeek,agendaDay'
+				},
+			   
+			    /***
+					BEGIN Pull the events from the database
+			    ***/
+			   
+				events: events_source,
+				
+				/***
+					END Pull the events from the database
+			    ***/
+			   
+				// Convert the allDay from string to boolean
+				eventRender: function(event, element, view) 
+				{
+					if (event.allDay === 'true') {
+						event.allDay = true;
+					} else {
+						event.allDay = false;
+					}
+				},
+				
+				/*
+					selectable:true will enable user to select datetime slot
+					selectHelper will add helpers for selectable.
+				*/
+				
+			   selectable: true,
+			   selectHelper: true,
+			   /*
+					when user select timeslot this option code will execute.
+					It has three arguments. Start,end and allDay.
+					Start means starting time of event.
+					End means ending time of event.
+					allDay means if events is for entire day or not.
+				*/
+				select: function(start, end, allDay) 
+				{
+
+				/*
+					after selection user will be promoted for enter title for event.
+				*/
+
+				var title = prompt('Event Title:');
+
+				// var url = prompt('Type Event url, if exits:');
+				/*
+					if title is entered calendar will add title and event into fullCalendar.
+				*/
+				
+				/***
+					BEGIN Create/Add a new event to the calendar.
+			    ***/
+				
+				if (title) 
+				{
+			   
+				var start = $.fullCalendar.formatDate(start, "yyyy-MM-dd HH:mm:ss");
+				var end = $.fullCalendar.formatDate(end, "yyyy-MM-dd HH:mm:ss");
+				
+				var data = {};
+				data.title = title;
+				data.start = start;
+				data.end = end;
+				data.allDay = allDay;
+				data.scheduleId = {{ schedule.id }};
+				
+				// add the csrf_token for security in django
+				data.csrfmiddlewaretoken = '{{ csrf_token }}';
+				
+				console.log(data);
+				
+				// add the start ajax event here for user interface
+				$.ajax({
+					url: '/entry/add/',
+					data: data,
+					type: "POST",
+					success: function(json) {
+						// add the finished ajax event here for user interface
+						alert('Added Successfully');
+					}
+				});
+				
+				calendar.fullCalendar('renderEvent',
+				{
+					title: title,
+					start: start,
+					end: end,
+					allDay: allDay
+				},
+					true // make the event "stick"
+				);
+			    }
+					calendar.fullCalendar('unselect');
+			    },
+				
+				/***
+					END Create/Add a new event to the calendar.
+			    ***/
+			   
+				editable: true,
+				
+				/***
+					BEGIN Update an event to the calendar.
+			    ***/
+				
+				eventDrop: function(event, delta) 
+				{
+					var start = $.fullCalendar.formatDate(event.start, "yyyy-MM-dd HH:mm:ss");
+					var end = $.fullCalendar.formatDate(event.end, "yyyy-MM-dd HH:mm:ss");
+					
+					var data = {}
+					data.title = event.title
+					data.start = start
+					data.end = end
+					data.allDay = event.allDay
+					data.scheduleId = {{ schedule.id }}
+					data.id = event.id;
+					
+					// add the csrf_token for security in django
+					data.csrfmiddlewaretoken = '{{ csrf_token }}';
+					
+					$.ajax({
+						url: '/entry/edit/',
+						data: data,
+						type: "POST",
+						success: function(json) {
+							alert("Updated Successfully");
+						}
+					});
+				},
+				
+				/***
+					END Update an event to the calendar.
+			    ***/
+				
+				/***
+					BEGIN Delete an event to the calendar.
+			    ***/
+				
+				eventClick: function(event) {
+				
+					var decision = confirm("Do you really want to do that?"); 
+					if (decision) {
+					
+					var data = {}
+					data.id = event.id;
+					
+					// add the csrf_token for security in django
+					data.csrfmiddlewaretoken = '{{ csrf_token }}';
+					
+					$.ajax({
+						type: "POST",
+						url: "/entry/delete/",
+						data: data,
+						success: function(json) {
+							$('#calendar').fullCalendar('removeEvents', event.id);
+							alert("Deleted Successfully");}
+					});
+					}
+				},
+			  
+			    /***
+					END Delete an event to the calendar.
+			    ***/
+			  
+				eventResize: function(event) {
+					var start = $.fullCalendar.formatDate(event.start, "yyyy-MM-dd HH:mm:ss");
+					var end = $.fullCalendar.formatDate(event.end, "yyyy-MM-dd HH:mm:ss");
+					
+					var data = {}
+					data.title = event.title
+					data.start = start
+					data.end = end
+					data.allDay = event.allDay
+					data.scheduleId = {{ schedule.id }}
+					data.id = event.id;
+					
+					// add the csrf_token for security in django
+					data.csrfmiddlewaretoken = '{{ csrf_token }}';
+					
+					$.ajax({
+						url: '/entry/edit/',
+						data: data ,
+						type: "POST",
+						success: function(json) {
+							alert("Updated Successfully");
+						}
+					});
+				}
+		   
+		  });
+		  
+		// });
+		</script>
+
+
+{% endblock %}

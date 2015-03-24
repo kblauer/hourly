@@ -1,9 +1,29 @@
 {% extends "index.html" %}
 
 {% block indexContent %}
-<div class="container">
-	<h2>Your login details are invalid! </h2>
-	<p>Click <a href="/">here</a> to login again. </p>
+	<header id="head" class="secondary"></header>
+	
+	<!-- container -->
+	<div class="container">
+
+		<ol class="breadcrumb">
+			<li><a href="/">Home</a></li>
+			<li class="active">Invalid Login</li>
+		</ol>
+
+		<div class="row">
+			
+			<!-- Article main content -->
+			<article class="col-xs-12 maincontent">
+				<header class="page-header">
+					<h1 class="page-title">Invalid Login</h1>
+				</header>
+				
+				
+	<h3>Your login details are invalid! </h3>
+	<p>Click <a href="/signin/">here</a> to login again. </p>
+	
+</div>
 </div>
 	
 {% endblock %}

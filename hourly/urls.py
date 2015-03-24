@@ -9,13 +9,17 @@ from django.contrib import admin
 urlpatterns = patterns('',
                        
     (r'^profile/', include('userprofile.urls')),
-    (r'^sched/', include('schedentry.urls')),
+    (r'^sched/', include('schedule.urls')),
+    (r'^entry/', include('schedentry.urls')),
     
     # *** Homepage URL ***
     url(r'^$', 'hourly.views.home', name='home'),
     url(r'^about/$', 'hourly.views.about', name='about'),
-    url(r'^services/$', 'hourly.views.services', name='services'),
+    #url(r'^services/$', 'hourly.views.services', name='services'),
     url(r'^contact/$', 'hourly.views.contact', name='contact'),
+    
+    url(r'^signin/$', 'hourly.views.signin', name='signin'),
+    url(r'^signup/$', 'hourly.views.signup', name='signup'),
 
     url(r'^dash/$', 'hourly.views.dashboard', name='dashboard'),
 
@@ -33,6 +37,8 @@ urlpatterns = patterns('',
     url(r'^user/logout/$', 'hourly.views.logout'),
     url(r'^user/success/$', 'hourly.views.success'),
     url(r'^user/invalid/$', 'hourly.views.invalid_login'),
+    url(r'^user/register/$', 'hourly.views.register_user'),
+    url(r'^user/register_success/$', 'hourly.views.register_success'),
     
     
 )

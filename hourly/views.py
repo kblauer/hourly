@@ -8,6 +8,8 @@ from django.http import HttpResponseRedirect
 from django.contrib import auth
 from django.core.context_processors import csrf
 from django.template import RequestContext
+from django.contrib.auth.forms import UserCreationForm
+from schedule.models import Schedule
 
 # This is the Home view, it gets called when the index.html page is requested.  
 # All it needs is a username context to fill, if the current user is logged in.
@@ -30,6 +32,15 @@ def home(request):
     #return render_to_response('index.html', 
     #                          {'username' : username},
     #                          context_instance=RequestContext(request))
+    
+def signin (request):
+    args = {}
+    args.update(csrf(request))
+    
+    return render_to_response('signin.html', args)
+    
+def signup (request):
+    return render_to_response('signup.html')
 
 
 # *** Begin User authentication views *** 
@@ -94,7 +105,33 @@ def dashboard(request):
     if request.user.is_authenticated():
         username = request.user.username
         
-    return render_to_response('dash.html', 
-                              {'username' : username})
+        schedules = None
     
+        try:
+            schedules = Schedule.objects.filter(user = request.user)
+            
+        except:
+            schedules = None
+            
+    args = {}
+    args['username'] = username
+    args['schedules'] = schedules
+        
+    return render_to_response('dash.html', args)
     
+def register_user(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/accounts/register_success')
+        
+    args = {}
+    args.update(csrf(request))
+    
+    args['form'] = UserCreationForm()
+    
+    return render_to_response('signup.html', args)
+
+def register_success(request):
+    return render_to_response('register_success.html')

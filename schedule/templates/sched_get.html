@@ -1,0 +1,54 @@
+{% extends "dash.html" %}
+
+{% block dashContent %}
+
+    <!-- Page Heading -->
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">
+                Create Schedule <small>New Schedule for your user</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-dashboard"></i><a href="/dash/"> Dashboard</a>
+                </li>
+                <li class="active">
+                	View & Edit Schedule
+                </li>
+            </ol>
+        </div>
+    </div>
+    <!-- /.row -->
+
+
+    <div class="row">
+
+    
+<a href="/sched/create/">
+	<button type="button" class="btn btn-primary">Create New Schedule</button> <br /><br />
+</a>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-clock-o fa-fw"></i>View Schedule: {{ schedule.scheduleName }}</h3>
+    </div>
+    <div class="panel-body">
+        <div class="list-group">
+            <a  class="list-group-item">
+                <i class="fa fa-fw "></i>Schedule Name: {{ schedule.scheduleName }}
+            </a>
+            <a class="list-group-item">
+                <i class="fa fa-fw "></i>Schedule Description: {{ schedule.scheduleDescription }}
+            </a>
+            <a class="list-group-item">
+                <i class="fa fa-fw "></i>Schedule Creation Time: {{ schedule.createTime }}
+            </a>
+            <a class="list-group-item">
+                <i class="fa fa-fw "></i>Schedule Update Time: {{ schedule.updateTime }}
+            </a>
+        </div>
+    </div>
+</div>
+    
+    
+{% endblock %}

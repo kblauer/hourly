@@ -11,5 +11,8 @@ class UserProfile(models.Model):
     availableTimes = models.CharField(max_length=100)
     payRate = models.CharField(max_length=10)
     duties = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.user.username
     
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])

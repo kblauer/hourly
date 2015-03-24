@@ -1,10 +1,30 @@
 {% extends "index.html" %}
 
 {% block indexContent %}
-<div class="container">
-	<h2>Hi {{ full_name }}, you are now logged in!</h2>
+	<header id="head" class="secondary"></header>
+	
+	<!-- container -->
+	<div class="container">
+
+		<ol class="breadcrumb">
+			<li><a href="/">Home</a></li>
+			<li class="active">Successful Login</li>
+		</ol>
+
+		<div class="row">
+			
+			<!-- Article main content -->
+			<article class="col-xs-12 maincontent">
+				<header class="page-header">
+					<h1 class="page-title">Login Success!</h1>
+				</header>
+
+
+	<h3>Hi {{ full_name }}, you are now logged in!</h3>
 	<p>Click <a href="/">here</a> to continue
 	<p>Click <a href="/user/logout/">here</a> to logout. </p>
+
+</div>
 </div>
 	
 {% endblock %}
