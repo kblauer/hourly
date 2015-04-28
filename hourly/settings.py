@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     'userprofile',
     'schedentry',
     'schedule',
+    'contact',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -97,3 +98,11 @@ STATICFILES_DIRS = (
 # It allows us to create an arbitrary model which extends the information.
 # This line creates a 1-to-1 link between a User and a UserProfile
 AUTH_PROFILE_MODULE = 'userprofile.UserProfile'
+
+EMAIL_HOST = 'mail.server312.com'
+EMAIL_HOST_USER = 'noreply@texasibiz.net'
+EMAIL_HOST_PASSWORD = 'viper11'
+DEFAULT_FROM_EMAIL = 'noreply@texasibiz.net'
+SERVER_EMAIL = 'noreply@texasibiz.net'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587

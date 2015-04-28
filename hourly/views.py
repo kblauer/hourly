@@ -10,6 +10,30 @@ from django.core.context_processors import csrf
 from django.template import RequestContext
 from django.contrib.auth.forms import UserCreationForm
 from schedule.models import Schedule
+from django.core.mail import send_mail
+
+def contact(request):
+    errors = []
+    if request.method == 'POST':
+        if not request.POST.get('subject', ''):
+            errors.append('Enter a subject.')
+        if not request.POST.get('message', ''):
+            errors.append('Enter a message.')
+        if request.POST.get('email') and '@' not in request.POST['email']:
+            errors.append('Enter a valid e-mail address.')
+        if not errors:
+            send_mail(
+                request.POST['subject'],
+                request.POST['message'],
+                request.POST.get('email','noreply@texasibiz.net'),
+                ['admin@texasibiz.net'], #email address where message is sent.
+            )
+            return HttpResponseRedirect('/thanks/')
+    return render(request, 'contact.html',
+        {'errors': errors})
+
+def thanks(request):
+    return render_to_response('thanks.html')
 
 # This is the Home view, it gets called when the index.html page is requested.  
 # All it needs is a username context to fill, if the current user is logged in.
@@ -88,16 +112,7 @@ def services(request):
         
     return render_to_response('services.html', 
                               {'username' : username})
-    
-def contact(request):
-    username = None
-    
-    if request.user.is_authenticated():
-        username = request.user.username
-        
-    return render_to_response('contact.html', 
-                              {'username' : username})
-    
+
 
 def dashboard(request):
     username = None
