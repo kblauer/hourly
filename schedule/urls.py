@@ -11,6 +11,8 @@ urlpatterns = patterns('',
     # The edit URL in this case routes to show the actual calendar application
     # for that specific schedule
     url(r'^edit/(?P<sched_id>\d+)/$', 'schedule.views.editSchedule'),
+    
+    url(r'^empview/(?P<sched_id>\d+)/$', 'schedule.views.employeeView'),
 
     
 )

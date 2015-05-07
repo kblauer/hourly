@@ -44,6 +44,7 @@ INSTALLED_APPS = (
     'schedentry',
     'schedule',
     'contact',
+    'comments',
 )
 
 MIDDLEWARE_CLASSES = (

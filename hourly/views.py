@@ -3,7 +3,7 @@
 # which are essentially just directories.  This is the top-level views file.  
 # it belongs to no app.  This means that it's specific to hourly, and not modular.
 
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, render
 from django.http import HttpResponseRedirect
 from django.contrib import auth
 from django.core.context_processors import csrf
@@ -11,6 +11,7 @@ from django.template import RequestContext
 from django.contrib.auth.forms import UserCreationForm
 from schedule.models import Schedule
 from django.core.mail import send_mail
+from userprofile.models import UserProfile
 
 def contact(request):
     errors = []
@@ -150,3 +151,20 @@ def register_user(request):
 
 def register_success(request):
     return render_to_response('register_success.html')
+
+def employee_list(request):
+    employees = None
+    
+    try:
+        employees = UserProfile.objects.filter(manager = request.user)
+        
+        args = {}
+        
+        args['username'] = request.user.username
+        args['employees'] = employees
+        
+        return render_to_response('employee_list.html', args)
+        
+    except:
+        return HttpResponseRedirect('/dash/')
+        

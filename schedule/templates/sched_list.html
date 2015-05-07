@@ -27,11 +27,9 @@
 	<button type="button" class="btn btn-primary">Create New Schedule</button> <br /><br />
 	</a>
     
-    {% if not schedules %}
-    <h3>Sorry, you do not have any schedules</h3>
+    {% if schedules %}
     
-    {% else %}
-        <div class="list-group">
+    	<div class="list-group">
         	{% for item in schedules %}
             <a href="/sched/edit/{{ item.id }}" class="list-group-item">
                 <i class="fa fa-fw fa-calendar"></i>  {{ item.scheduleName }}
@@ -42,6 +40,24 @@
         <div class="text-right">
             <a href="#">View All Activity <i class="fa fa-arrow-circle-right"></i></a>
         </div>
+    
+    {% elif managerSchedules %}
+    	<div class="list-group">
+        	{% for item in managerSchedules %}
+            <a href="/sched/empview/{{ item.id }}" class="list-group-item">
+                <i class="fa fa-fw fa-calendar"></i>  {{ item.scheduleName }}
+                <a href="/sched/get/{{ item.id }}">  View Info </a>
+            </a>
+            {% endfor %}
+        </div>
+        <div class="text-right">
+            <a href="#">View All Activity <i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+    
+    {% else %}
+    
+    <h3>Sorry, you do not have any schedules</h3>
+        
     {% endif %}
     
     

@@ -11,6 +11,7 @@ urlpatterns = patterns('',
     (r'^profile/', include('userprofile.urls')),
     (r'^sched/', include('schedule.urls')),
     (r'^entry/', include('schedentry.urls')),
+    (r'^comment/', include('comments.urls')),
     
     # *** Homepage URL ***
     url(r'^$', 'hourly.views.home', name='home'),
@@ -23,6 +24,7 @@ urlpatterns = patterns('',
     url(r'^signup/$', 'hourly.views.signup', name='signup'),
 
     url(r'^dash/$', 'hourly.views.dashboard', name='dashboard'),
+    url(r'^employees/$', 'hourly.views.employee_list', name='employee_list'),
 
     # *** Admin site URL ***
     # This enables the django admin site and it's in-browser features.  

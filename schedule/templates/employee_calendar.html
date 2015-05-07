@@ -15,14 +15,14 @@
     <div class="row">
         <div class="col-lg-12">
             <h1 class="page-header">
-                Edit Schedule <small>Add, Edit, and Remove Events</small>
+                View Schedule <small>View and Comment on Manager's Schedule</small>
             </h1>
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-dashboard"></i><a href="/dash/"> Dashboard</a>
                 </li>
                 <li class="active">
-                	Edit Schedule
+                	View Schedule
                 </li>
             </ol>
         </div>
@@ -35,13 +35,25 @@
 <!--FullCalendar container div-->
 <div id='calendar'></div>
 
+<br /><br />
+
+<form method="post" action="/comment/add/"> {% csrf_token %}
+Enter Your Comment:
+<input type="text" id="comment" name="comment" />
+<input type="hidden" id="schedule" name="schedule" value="{{ schedule.id }}" />
+<button type="submit" name="submit">Submit</button>
+</form>
+
 <br /> <br />
 {% for comment in comments %}
 {{ comment.user }}:  {{ comment.comment }}
 <br /><br />
 {% endfor %}
 
+ 
 </div>
+
+
 
 {% endblock %}
 
@@ -112,7 +124,7 @@
 			var calendar = $('#calendar').fullCalendar(
 			{
 			
-				editable: true,
+				editable: false,
 				
 				header: {
 					left: 'prev,next today',
@@ -145,8 +157,8 @@
 					selectHelper will add helpers for selectable.
 				*/
 				
-			   selectable: true,
-			   selectHelper: true,
+			   selectable: false,
+			   selectHelper: false,
 			   /*
 					when user select timeslot this option code will execute.
 					It has three arguments. Start,end and allDay.
@@ -218,7 +230,7 @@
 					END Create/Add a new event to the calendar.
 			    ***/
 			   
-				editable: true,
+				editable: false,
 				
 				/***
 					BEGIN Update an event to the calendar.

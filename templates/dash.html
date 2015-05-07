@@ -144,7 +144,11 @@
                         <a href="/sched/list/"><i class="fa fa-fw fa-bar-chart-o"></i>My Schedules</a>
                     </li>
                     <li>
-                        <a href="#"><i class="fa fa-fw fa-table"></i> Item 3</a>
+                    	{% if not user.profile.manager %}
+                    	<a href="/employees/"><i class="fa fa-fw fa-table"></i>  Employee List</a>
+                    	{% else %}
+                        <a href="#"><i class="fa fa-fw fa-table"></i>  Item 3</a>
+                        {% endif %}
                     </li>
                     <li>
                         <a href="#"><i class="fa fa-fw fa-edit"></i> Item 4</a>

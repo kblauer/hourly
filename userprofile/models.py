@@ -11,6 +11,7 @@ class UserProfile(models.Model):
     availableTimes = models.CharField(max_length=100)
     payRate = models.CharField(max_length=10)
     duties = models.CharField(max_length=100)
+    manager = models.ForeignKey(User, related_name='manager', default=None, null=True)
 
     def __str__(self):
         return self.user.username

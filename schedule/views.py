@@ -6,6 +6,7 @@ from django.template import RequestContext
 from schedule.models import Schedule
 from .forms import ScheduleForm
 from schedentry.models import ScheduleEntry
+from comments.models import ScheduleComment
 
 
 def sched_list(request):
@@ -13,9 +14,14 @@ def sched_list(request):
     username = user.username
     
     schedules = None
+    managerSchedules = None
     
     try:
-        schedules = Schedule.objects.filter(user = user)
+        if not user.profile.manager:
+            schedules = Schedule.objects.filter(user = user)
+        
+        elif user.profile.manager:
+            managerSchedules = Schedule.objects.filter(user = user.profile.manager)
         
     except:
         schedules = None
@@ -24,6 +30,7 @@ def sched_list(request):
     args = {}
     args['username'] = username
     args['schedules'] = schedules
+    args['managerSchedules'] = managerSchedules
     
     return render_to_response('sched_list.html', args)
 
@@ -72,6 +79,7 @@ def editSchedule(request, sched_id):
     try:
         schedule = Schedule.objects.get(pk = sched_id)
         entries = ScheduleEntry.objects.filter(user = request.user, schedule = schedule)
+        comments = ScheduleComment.objects.filter(schedule = schedule)
     except:
         entries = None
     
@@ -80,6 +88,30 @@ def editSchedule(request, sched_id):
     args['username'] = request.user.username
     args['schedule'] = get_object_or_404(Schedule, pk=sched_id)
     args['entries'] = entries
+    args['comments'] = comments
     
     return render_to_response('calendar_app.html', args)
+
+def employeeView(request, sched_id):
+    
+    args = {}
+    args.update(csrf(request))
+    
+    entries = None
+    
+    try:
+        schedule = Schedule.objects.get(pk = sched_id)
+        entries = ScheduleEntry.objects.filter(user = request.user.profile.manager, schedule = schedule)
+        comments = ScheduleComment.objects.filter(schedule = schedule)
+    except:
+        entries = None
+    
+    
+    
+    args['username'] = request.user.username
+    args['schedule'] = get_object_or_404(Schedule, pk=sched_id)
+    args['entries'] = entries
+    args['comments'] = comments
+    
+    return render_to_response('employee_calendar.html', args)
     
