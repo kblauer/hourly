@@ -50,10 +50,10 @@ In order to login to the site, use the following credentials:
 		```
 		To this:
 		```
-			<b>#</b>if [ “$VIRTUALENVWRAPPER_PYTHON” = “” ]
-			<b>#</b>then
+			#if [ “$VIRTUALENVWRAPPER_PYTHON” = “” ]
+			#then
 				VIRTUALENVWRAPPER_PYTHON=<b>”/usr/bin/python3”</b>
-			<b>#</b>fi
+			#fi
 		```
 		
 		and run ```. ~/.bashrc```
